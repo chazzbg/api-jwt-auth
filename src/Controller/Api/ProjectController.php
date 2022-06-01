@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Project;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -56,7 +57,6 @@ class ProjectController extends AbstractController
                     $projectArray['tasks'][] = [
                         'id' => $task->getId(),
                         'name' => $task->getName(),
-                        'deleted_at' => $task->getDeletedAt()?->format('Y-m-d H:i:s'),
                     ];
                 }
             }
@@ -156,7 +156,7 @@ class ProjectController extends AbstractController
     #[Route('/project/{id}', name: 'project_delete', methods: ['DELETE'])]
     public function delete(Project $project)
     {
-        $project->setDeletedAt(new \DateTimeImmutable());
+        $project->setDeletedAt(new DateTimeImmutable());
 
         $repo = $this->entityManager->getRepository(Project::class);
         $repo->add($project, true);

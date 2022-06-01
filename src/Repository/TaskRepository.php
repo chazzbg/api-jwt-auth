@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Project;
 use App\Entity\Task;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -39,4 +40,16 @@ class TaskRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @return Task[] Returns an array of Task objects
+     */
+    public function findAllByProject(Project $project): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.project = :val')
+            ->setParameter('val', $project)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

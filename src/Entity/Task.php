@@ -12,16 +12,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Task
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid')]
+    #[ORM\Column(type: 'string')]
     #[ORM\GeneratedValue(strategy: "CUSTOM")]
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private string $id;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
-    private string $name;
+    private ?string $name;
 
-    #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'tasks')]
+    #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'tasks', cascade: ['all'])]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotBlank]
     private Project $project;
@@ -29,7 +29,7 @@ class Task
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private DateTimeImmutable $deletedAt;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -39,7 +39,7 @@ class Task
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 

@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Project
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'uuid')]
+    #[ORM\Column(type: 'string')]
     #[ORM\GeneratedValue(strategy: "CUSTOM")]
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private string $id;
@@ -41,7 +41,7 @@ class Project
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?DateTimeImmutable $deletedAt;
 
-    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Task::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Task::class, orphanRemoval: true, cascade: ['all'])]
     private $tasks;
 
     public function __construct()
