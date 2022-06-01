@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProjectRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,7 +21,7 @@ class Project
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
-    private string $title;
+    private ?string $title;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $description;
@@ -38,7 +39,7 @@ class Project
     private ?string $company;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?\DateTimeImmutable $deletedAt;
+    private ?DateTimeImmutable $deletedAt;
 
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: Task::class, orphanRemoval: true)]
     private $tasks;
@@ -49,12 +50,13 @@ class Project
     }
 
     #[Assert\IsTrue(message: "Company or client should be set!")]
-    public function isClientOrCompanySet(){
+    public function isClientOrCompanySet()
+    {
         return $this->company !== null || $this->client !== null;
     }
 
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -64,7 +66,7 @@ class Project
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
 
@@ -112,7 +114,7 @@ class Project
         return $this->client;
     }
 
-    public function setClient(string $client): self
+    public function setClient(?string $client): self
     {
         $this->client = $client;
 
@@ -131,12 +133,12 @@ class Project
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable
+    public function getDeletedAt(): ?DateTimeImmutable
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+    public function setDeletedAt(?DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
 

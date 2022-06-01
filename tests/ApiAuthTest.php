@@ -4,7 +4,7 @@ namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ApiAuthTestCaseTest extends WebTestCase
+class ApiAuthTest extends WebTestCase
 {
     public function testWrongCredentials(): void
     {
@@ -13,15 +13,15 @@ class ApiAuthTestCaseTest extends WebTestCase
             'username'=> 'free',
             'password' => 'man'
         ];
-        $client->catchExceptions(false);
         $client->request('POST', '/api/login_check', [],[],[
             'CONTENT_TYPE' => 'application/json',
             'Content-type' => 'application/json'
         ], json_encode($data) );
 
 
-        $this->assertResponseIsSuccessful();
-        $this->isJson();
+        self::assertResponseIsSuccessful();
+
+        self::assertJson($client->getResponse()->getContent());
         $data = json_decode($client->getInternalResponse()->getContent(), false);
         self::assertEquals(401, $data->code);
     }
@@ -29,7 +29,6 @@ class ApiAuthTestCaseTest extends WebTestCase
     public function testTokenGeneration(): void
     {
         $client = static::createClient();
-        $client->catchExceptions(false);
         $data = [
             'username'=> 'chazzbg',
             'password' => 'unforeseen_consequences'
@@ -40,8 +39,9 @@ class ApiAuthTestCaseTest extends WebTestCase
         ], json_encode($data));
 
 
-        $this->assertResponseIsSuccessful();
-        $this->isJson();
+        self::assertResponseIsSuccessful();
+
+        self::assertJson($client->getResponse()->getContent());
         $data = json_decode($client->getInternalResponse()->getContent(), false);
         self::assertNotEmpty($data->token);
     }
